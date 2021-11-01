@@ -57,6 +57,8 @@ type DownloadProgress func(current, total int64)
 
 type UploadProgress func(current, total int64)
 
+type Close bool
+
 // File upload files matching the name pattern such as
 // /usr/*/bin/go* (assuming the Separator is '/')
 func File(patterns ...string) interface{} {
@@ -253,6 +255,8 @@ func (r *Req) Do(method, rawurl string, vs ...interface{}) (resp *Resp, err erro
 		case context.Context:
 			req = req.WithContext(vv)
 			resp.req = req
+		case Close:
+			req.Close = bool(vv)
 		case error:
 			return nil, vv
 		}
